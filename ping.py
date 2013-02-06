@@ -13,7 +13,7 @@ raw = urllib.urlopen("http://www.nssl.noaa.gov/projects/ping/display/ping.php")
 daynum, timenum, lat, lon, ptype = [], [], [], [], []
 rawtimenum = []
 hailmag = []
-print("Processing data...")
+print("::: File downloaded, now processing PING data")
 
 for line in raw:
     if line[:2] == 'pr': # ptype report
@@ -36,7 +36,7 @@ for line in raw:
             lon.append(match.group(4))
             hailmag.append(match.group(5))
             ptype.append('0')
-print("::: Done processing PING data ")
+print("::: Done processing PING data, now creating placefiles")
 
 # post-processing to grab latest x hours
 minTime = min(rawtimenum)
@@ -54,7 +54,7 @@ for t in times.keys():
     f.write('Title: Latest ' + str(t) + 'min PING reports\n')
     f.write('Refresh: 5\n') # refresh time in minutes
     f.write('Color: 255 255 255\n') # default color to be used
-    f.write('IconFile: 1, 15, 15, 8, 8, "http://gr.wxjoe.com/i/pingIcons.png"\n')
+    f.write('IconFile: 1, 15, 15, 8, 8, "pingIcons.png"\n') 
     # fileNum, width, height, hotX, hotY, fileName
     f.write('Font: 1, 11, 1, "Courier New"\n') # whatever
     message = "; Created by Joe Moore \n; Generated at " + time.strftime("%x %X %Z") + "\n; Found " + str(len(daynum)) + " total reports\n; Made with Python!\n; Public Domain"
@@ -76,9 +76,8 @@ for t in times.keys():
 
     f.write('; Plotted ' + str(reports) + ' reports')
     f.close()
+    log = open(str(t) + 'reportCount.txt', 'a')
+    log.write(time.strftime("%x %X %Z") + ' ' + str(reports) + '\n')
+    log.close()
+
     print("::: Done writing Placefile")
-
-##log = open('reportCount.txt', 'a')
-##log.write(time.strftime("%x %X %Z") + ' ' + str(reports) + '\n')
-##log.close()
-
