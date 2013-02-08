@@ -43,9 +43,9 @@ minTime = min(rawtimenum)
 maxTime = max(rawtimenum)
 nowMinutes = (nowTime - baseTime) / 60
 times = {}
-times[15] = nowMinutes - 15
-times[30] = nowMinutes - 30
-times[60] = nowMinutes - 60
+#times[15] = nowMinutes - 15
+#times[30] = nowMinutes - 30
+times[600] = nowMinutes - 600
 ### Step 2: Create the placefile ##################################################
 for t in times.keys():
     # open placefile to write
@@ -76,8 +76,42 @@ for t in times.keys():
 
     f.write('; Plotted ' + str(reports) + ' reports')
     f.close()
-    log = open(str(t) + 'reportCount.txt', 'a')
+    log = open(str(t) + 'ALLreportCount.txt', 'a')
     log.write(time.strftime("%x %X %Z") + ' ' + str(reports) + '\n')
     log.close()
 
-    print("::: Done writing Placefile")
+print("::: Done writing ALL type Placefiles")
+
+# Now create hail-only placefiles
+for t in times.keys():
+    # open placefile to write
+    h = open('ping-hail-' + str(t) + 'min.txt', 'w')
+    # write basic header stuff for placefile
+    h.write('Title: Latest ' + str(t) + 'min PING Hail reports\n')
+    h.write('Refresh: 5\n') # refresh time in minutes
+    h.write('Color: 255 255 255\n') # default color to be used
+    h.write('IconFile: 1, 15, 15, 8, 8, "pingIcons.png"\n') 
+    # fileNum, width, height, hotX, hotY, fileName
+    h.write('Font: 1, 11, 1, "Courier New"\n') # whatever
+    message = "; Created by Joe Moore \n; Generated at " + time.strftime("%x %X %Z") + "\n; Found " + str(len(daynum)) + " total reports\n; Made with Python!\n; Public Domain"
+    h.write(message + '\n\n')
+    reports = 0
+    # Now let's write the actual data!
+    for i in range(len(daynum)):
+        if rawtimenum[i] > times[t] and ptype[i] == '0':
+            reports += 1
+            h.write('Object: ' + lat[i] + ', ' + lon[i] + '\n')
+            h.write('Threshold: 999\n') # Display at any zoom level (?)
+            h.write(' Icon: 0, 0, 000, 1, ' + str(int(ptype[i])+1) + ', "Time: ' + timenum[i] + '\\nHail Size: ' + str(float(hailmag[i])/4.) + ' inches"\n')
+            h.write(' Text: 0, -15, 1, "' + str(float(hailmag[i])/4.) + '" "\n')
+            # or, for hail size on the ball
+            #h.write(' Text: 0, 0, 1, "' + str(float(hailmag[i])/4.) + '" "\n')
+            h.write('End:\n\n')
+    h.write('; Plotted ' + str(reports) + ' reports')
+    h.close()
+    log = open(str(t) + 'HAILreportCount.txt', 'a')
+    log.write(time.strftime("%x %X %Z") + ' ' + str(reports) + '\n')
+    log.close()
+
+print("::: Done writing HAIL ONLY Placefiles")
+print("::: All done!")
