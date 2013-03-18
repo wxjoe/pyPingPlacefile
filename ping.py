@@ -5,7 +5,7 @@ import urllib, re, calendar, time
 now = time.gmtime() # set year to this year; needed for baseTime
 baseTime = calendar.timegm((int(time.strftime("%Y", now)),1,1,0,0,0,0,0,0))
 nowTime = calendar.timegm((int(time.strftime("%Y", now)), int(time.strftime("%m", now)), int(time.strftime("%d", now)), int(time.strftime("%H", now)), int(time.strftime("%M", now)),0,0, 0,0))
-ptypeLst = ["Hail","Test","None","Rain","Drizzle","Freezing Rain","Freezing Drizzle","Rain/Snow","Rain/Ice Pellets","Ice Pellets/Snow","Snow","Wet Snow","Ice Pellets","Graupel"]
+ptypeLst = ["Hail","Test","None","Rain","Drizzle","Freezing Rain","Freezing Drizzle","Rain/Snow","Ice Pellets/Snow","Rain/Ice Pellets","Snow","Wet Snow","Ice Pellets","Graupel"]
 ### Step 1: Process the raw data ###############################################
 # open PING homepage
 raw = urllib.urlopen("http://www.nssl.noaa.gov/projects/ping/display/ping.php")
